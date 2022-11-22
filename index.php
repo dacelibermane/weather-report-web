@@ -6,18 +6,19 @@ require_once "vendor/autoload.php";
 use App\DataRequest;
 
 
-$title = "Weather App";
 $apiKey = $_ENV['API_KEY'];
-$cityName = $_GET['city'] ?? 'Riga';
+$cityName = $_GET['city'] ?? "Riga";
 
+if (empty($cityName)) {
+    $cityName = "Riga";
+}
 
 $data = new DataRequest($apiKey);
 $city = $data->getCity($cityName);
 $weather = $data->getWeather($cityName);
 $city->setName($cityName);
 $weather->setTemperature($weather->getTemperature());
-$weather->setWeatherCondition($weather->getWeatherCondition());
-
+$iconUrl = $weather->getIcon();
 
 ?>
 <!doctype html>
@@ -27,14 +28,13 @@ $weather->setWeatherCondition($weather->getWeatherCondition());
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo $title ?></title>
+    <title>Web app</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/24020c059d.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <!--Title-->
 <h1 class="title">Search Global Weather</h1>
-
 <!--Links-->
 <ul class="links">
     <li><a href="/?city=Riga">Riga</a></li>
@@ -51,13 +51,11 @@ $weather->setWeatherCondition($weather->getWeatherCondition());
     <!--weather display-->
     <div class="weather">
         <p><?= $city->getName() ?></p>
-        <p><?= $weather->getWeatherCondition() . "\n" ?></p>
+        <img src="<?= $iconUrl ?>" alt="weather"/>
         <p><i class="fa-solid fa-temperature-three-quarters"></i><?= $weather->getTemperature() . "°C\n" ?></p>
         <p><i class="fa-solid fa-wind"></i><?= $weather->getWindSpeed() . "m/s\n" ?></p>
         <p><i class="fa-solid fa-droplet"></i><?= $weather->getHumidity() . "%\n"; ?>
     </div>
 </div>
-
 </body>
 </html>
-

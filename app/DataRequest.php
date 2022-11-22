@@ -33,13 +33,13 @@ class DataRequest
         $weatherRequest = file_get_contents(self::API_URL . "data/2.5/weather?lat={$city->getLatitude()}&lon={$city->getLongitude()}&appid={$this->apiKey}&units=metric");
         $data = json_decode($weatherRequest, true);
 
+        $icon = $data ['weather'][0]['icon'];
+        $iconUrl = self::API_URL . "img/w/" . $icon . ".png";
+        $temperature = $data['main']['temp'] ?? 0;
+        $humidity = $data['main']['humidity'] ?? 0;
+        $windSpeed = $data['wind']['speed'] ?? 0;
 
-        return new Weather(
-            $data['weather'][0]['description'] ?? 0,
-            $data['main']['temp'] ?? 0,
-            $data['main']['humidity'] ?? 0,
-            $data['wind']['speed'] ?? 0
-        );
+        return new Weather($iconUrl,$temperature,$humidity,$windSpeed);
     }
 
 }
