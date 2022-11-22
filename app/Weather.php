@@ -11,7 +11,6 @@ class Weather
 
     public function __construct(string $weatherCondition, float $temperature, int $humidity, float $windSpeed)
     {
-
         $this->weatherCondition = $weatherCondition;
         $this->temperature = $temperature;
         $this->humidity = $humidity;
@@ -23,9 +22,19 @@ class Weather
         return $this->weatherCondition;
     }
 
+    public function setWeatherCondition(string $weatherCondition): void
+    {
+        $this->weatherCondition = ucfirst($weatherCondition);
+    }
+
     public function getTemperature(): float
     {
         return $this->temperature;
+    }
+
+    public function setTemperature(float $temperature): void
+    {
+        $this->temperature = floor($temperature);
     }
 
     public function getHumidity(): int

@@ -23,21 +23,23 @@ class DataRequest
         return new City(
             $cityName,
             $data[0]['lat'] ?? 0,
-            $data[0]['lon'] ?? 0,
-            $data[0]['country'] ?? 0);
+            $data[0]['lon'] ?? 0
+        );
     }
 
     public function getWeather($cityName): Weather
     {
-
         $city = $this->getCity($cityName);
         $weatherRequest = file_get_contents(self::API_URL . "data/2.5/weather?lat={$city->getLatitude()}&lon={$city->getLongitude()}&appid={$this->apiKey}&units=metric");
         $data = json_decode($weatherRequest, true);
+
 
         return new Weather(
             $data['weather'][0]['description'] ?? 0,
             $data['main']['temp'] ?? 0,
             $data['main']['humidity'] ?? 0,
-            $data['wind']['speed']);
+            $data['wind']['speed'] ?? 0
+        );
     }
+
 }
