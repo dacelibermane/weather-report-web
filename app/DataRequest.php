@@ -1,14 +1,11 @@
 <?php declare(strict_types=1);
 
-
 namespace App;
-
 
 class DataRequest
 {
     private const API_URL = "https://api.openweathermap.org/";
     private string $apiKey;
-
 
     public function __construct(string $apiKey)
     {
@@ -35,11 +32,12 @@ class DataRequest
 
         $icon = $data ['weather'][0]['icon'];
         $iconUrl = self::API_URL . "img/w/" . $icon . ".png";
-        $temperature = $data['main']['temp'] ?? 0;
-        $humidity = $data['main']['humidity'] ?? 0;
-        $windSpeed = $data['wind']['speed'] ?? 0;
 
-        return new Weather($iconUrl,$temperature,$humidity,$windSpeed);
+        return new Weather(
+            $iconUrl ?? 0,
+            $data['main']['temp'] ?? 0,
+            $data['main']['humidity'] ?? 0,
+            $data['wind']['speed'] ?? 0
+        );
     }
-
 }
