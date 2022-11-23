@@ -28,8 +28,9 @@ $iconUrl = $weather->getIcon();
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Web app</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Global weather</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="img/weather.png"
     <script src="https://kit.fontawesome.com/24020c059d.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -51,7 +52,7 @@ $iconUrl = $weather->getIcon();
     <!--weather display-->
     <div class="weather">
         <p><?= $city->getName() ?></p>
-        <img src="<?= $iconUrl ?>" alt="weather"/>
+        <img src="<?= $iconUrl ?>" alt="weather icon"/>
         <p><i class="fa-solid fa-temperature-three-quarters"></i><?= $weather->getTemperature() . "°C\n" ?></p>
         <p><i class="fa-solid fa-wind"></i><?= $weather->getWindSpeed() . "m/s\n" ?></p>
         <p><i class="fa-solid fa-droplet"></i><?= $weather->getHumidity() . "%\n"; ?>
