@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Models\City;
+use App\Models\Weather;
+
 class DataRequest
 {
     private const API_URL = "https://api.openweathermap.org/";

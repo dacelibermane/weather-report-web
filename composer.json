@@ -7,6 +7,7 @@
   "require": {
     "vlucas/phpdotenv": "^5.5",
     "ext-readline": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "nikic/fast-route": "^1.3"
   }
 }

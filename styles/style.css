@@ -78,9 +78,10 @@ input:focus{
     outline: none;
 }
 
-.fa-solid {
+.fa-solid{
     margin-right: 5px;
 }
+
 
 .btn {
     font-size: 15px;

@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App;
+namespace App\Models;
 
 class Weather
 {
     private string $icon;
-    private string $weatherCondition;
     private float $temperature;
     private int $humidity;
     private float $windSpeed;

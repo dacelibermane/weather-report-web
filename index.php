@@ -1,62 +1,38 @@
 <?php declare(strict_types=1);
 
+use Dotenv\Dotenv;
+use App\Controllers\WeatherController;
+
 require_once "vendor/autoload.php";
-\Dotenv\Dotenv::createImmutable(__DIR__)->load();
-
-use App\DataRequest;
+Dotenv::createImmutable(__DIR__)->load();
 
 
-$apiKey = $_ENV['API_KEY'];
-$cityName = $_GET['city'] ?? "Riga";
+$dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route) {
+    $route->addRoute('GET', '/', ['App\Controllers\WeatherController', 'index']);
+});
 
-if (empty($cityName)) {
-    $cityName = "Riga";
+//var_dump((new WeatherController())->index());
+
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+
+if (false !== $pos = strpos($uri, '?')) {
+    $uri = substr($uri, 0, $pos);
+}
+$uri = rawurldecode($uri);
+
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+switch ($routeInfo[0]) {
+    case FastRoute\Dispatcher::NOT_FOUND:
+        break;
+    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        break;
+    case FastRoute\Dispatcher::FOUND:
+        $handler = $routeInfo[1];
+        $vars = $routeInfo[2];
+        [$controller, $method] = $handler;
+        (new $controller)->$method();
+        break;
 }
 
-$data = new DataRequest($apiKey);
-$city = $data->getCity($cityName);
-$weather = $data->getWeather($cityName);
-$city->setName($cityName);
-$weather->setTemperature($weather->getTemperature());
-$iconUrl = $weather->getIcon();
-
-?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Global weather</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="icon" href="img/weather.png"
-    <script src="https://kit.fontawesome.com/24020c059d.js" crossorigin="anonymous"></script>
-</head>
-<body>
-<!--Title-->
-<h1 class="title">Search Global Weather</h1>
-<!--Links-->
-<ul class="links">
-    <li><a href="/?city=Riga">Riga</a></li>
-    <li><a href="/?city=Vilnius">Vilnius</a></li>
-    <li><a href="/?city=Tallinn">Tallinn</a></li>
-</ul>
-<div class="container">
-    <!--Form-->
-    <form action="index.php" method="get" class="form">
-        <label for="city">Enter city</label>
-        <input type="text" name="city" placeholder="Riga"><br>
-        <button type="submit" name="submit" class="btn">Submit</button>
-    </form>
-    <!--weather display-->
-    <div class="weather">
-        <p><?= $city->getName() ?></p>
-        <img src="<?= $iconUrl ?>" alt="weather icon"/>
-        <p><i class="fa-solid fa-temperature-three-quarters"></i><?= $weather->getTemperature() . "°C\n" ?></p>
-        <p><i class="fa-solid fa-wind"></i><?= $weather->getWindSpeed() . "m/s\n" ?></p>
-        <p><i class="fa-solid fa-droplet"></i><?= $weather->getHumidity() . "%\n"; ?>
-    </div>
-</div>
-</body>
-</html>
